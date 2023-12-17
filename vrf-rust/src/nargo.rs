@@ -55,14 +55,15 @@ impl VerifiableRandomGenerator{
         .output()
         .unwrap();
 
-        let verifier: String = std::fs::read_to_string(&temp_dir.join("Verifier.toml")).unwrap();
-        let proof: String = std::fs::read_to_string(&temp_dir.join("proofs").join("vrf.proof")).unwrap();
         if prove.status.success(){
             println!("Proof was generated!");
         }
         else{
-            eprintln!("Failed to generate proof!");
+            let error = String::from_utf8_lossy(&prove.stderr);
+            eprintln!("Failed to generate proof!: {:?}", &error);
         }
+        let verifier: String = std::fs::read_to_string(&temp_dir.join("Verifier.toml")).unwrap();
+        let proof: String = std::fs::read_to_string(&temp_dir.join("proofs").join("vrf.proof")).unwrap();
         Proof{
             proof: proof,
             verifier: verifier
