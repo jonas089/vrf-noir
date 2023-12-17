@@ -17,39 +17,46 @@ cargo test -- --nocapture
 
 My [ecdsa-circuit-input-lib](https://github.com/jonas089/ecdsa-circuit-input-lib) provides functionality to generate elliptic curve keypairs, sign messages and export the public and private key in a format that is accepted by the randomness generator/ circuit.
 
-Find examples to generate and store a `keypair` [here](https://github.com/jonas089/ecdsa-circuit-input-lib/blob/master/src/lib.rs).
+From the `example` crate:
 
 ```rust
-#[test]
-fn generate_signature_circuit_inputs(){
-    use ecdsa_circuit_input_lib::keys::ecdsa::EcdsaKeyManager;
-    use ecdsa_circuit_input_lib::core::signatures::InputGenerator;
-    use k256::{
-        ecdsa::{SigningKey}, FieldBytes
+use vrf_rust::nargo::VerifiableRandomGenerator;
+use ecdsa_circuit_input_lib::{keys::ecdsa::EcdsaKeyManager, core::signatures::{InputGenerator, Inputs}, db::StoreManager};
+use std::path::PathBuf;
+use serde_json;
+fn main(){
+    // any valid seed that is used to generate the random value
+    let hashed_nonce: Vec<u8> = vec![0;32];
+    let key_manger = EcdsaKeyManager{
+        slice: vec![]
     };
-    // initialize keystore
-    let store_manager: StoreManager = StoreManager{
-        path: PathBuf::from("./keys.db")
-    };
-    // get key
-    let key: db::Response = store_manager
-        .get_key_by_uid("SOME_KEY_UID_0".to_string())
-        .expect("[Error] Failed to get the key!");
-    // deserialize SigningKey from Response object
-    let key_slice: Vec<u8> = key.deserialize();
+    let key_serialized = key_manger.new();
     let key_manager: EcdsaKeyManager = EcdsaKeyManager{
-        slice: key_slice
+        slice: key_serialized
     };
-    // signing key ready for use with input generator
-    let deserialized_signing_key = key_manager.deserialize();
-    let message: Vec<u8> = vec![0;32];
-    // initialize the input generator
+    // generate circuit inputs
     let input_generator = InputGenerator{
-        sk: deserialized_signing_key,
-        message: message
+        sk: key_manager.deserialize(),
+        message: hashed_nonce
     };
     let inputs = input_generator.generate();
-    println!("Circuit Inputs: {:?}", inputs);
+    // initialize the random generator from a noir binary and specify the circuit location
+    let random_generator = VerifiableRandomGenerator{
+        bin: PathBuf::from("/users/chef/Desktop/vrf-noir/vrf-rust/bin/nargo-darwin"),
+        circuit: PathBuf::from("/users/chef/Desktop/vrf-noir/circuit")
+    };
+    // generate a proof and obtain the verifiable random value
+    let proof: vrf_rust::types::Proof = random_generator.generate(inputs.message, inputs.x, inputs.y, inputs.signature);
+    // output the random value
+    println!("Verifiable random value: {:?}", &proof.verifier);
+    // verify the integrity of the generation of the random parameter:
+    let is_valid: bool = random_generator.verify(&proof.proof, &proof.verifier);
+    if is_valid == true{
+        println!("The random value was verified successfully!")
+    }
+    else{
+        println!("The random value could not be verified!")
+    }
 }
 ```
 
