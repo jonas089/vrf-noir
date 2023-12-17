@@ -38,7 +38,12 @@ impl VerifiableRandomGenerator{
             Ok(file) => file,
         };
         // create verifier file
-        let mut verifier = match File::create(&temp_dir.join("Verifier.toml")) {
+        let _ = match File::create(&temp_dir.join("Verifier.toml")) {
+            Err(msg) => panic!("{:?}", msg),
+            Ok(file) => file,
+        };
+        // create proof file
+        let _ = match File::create(&temp_dir.join("vrf.proof")) {
             Err(msg) => panic!("{:?}", msg),
             Ok(file) => file,
         };
