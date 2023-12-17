@@ -1,0 +1,11 @@
+[package]
+name = "example"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+vrf-rust = {path="../vrf-rust"}
+ecdsa-circuit-input-lib = {git="https://github.com/jonas089/ecdsa-circuit-input-lib", branch="master"}
+serde_json = "1.0.108"

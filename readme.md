@@ -5,7 +5,7 @@ For a pos consensus network the input may be constrained to a timestamp in a cer
 The verifier contains the unique random output and can be used, together with the proof, to run the verification against the `Noir` circuit.
 
 # Test setup
-Edit the `.env` file to point to the global path of the `circuit` directory on your machine and the relative path to the nargo binary. Use either `nargo-darwin` or `nargo-linux`, depending on your system architecture.
+Edit the `.env` file to point to the global path of the `circuit` directory on your machine and the absolute path to the nargo binary. Use either `nargo-darwin` or `nargo-linux`, depending on your system architecture.
 
 To run the tests and see the output:
 ```

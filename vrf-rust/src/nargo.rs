@@ -63,7 +63,7 @@ impl VerifiableRandomGenerator{
             verifier: verifier
         }
     }
-    pub fn verify(&self, proof: &str , verifier: &str){
+    pub fn verify(&self, proof: &str , verifier: &str) -> bool{
         let temp_dir = tempdir().unwrap();
         let temp_dir = temp_dir.path().to_path_buf();
         let temp_src = temp_dir.join("src");
@@ -107,11 +107,11 @@ impl VerifiableRandomGenerator{
         .unwrap();
 
         if verify.status.success(){
-            println!("Proof was verified!");
+            true
         }
         else{
             let error = String::from_utf8_lossy(&verify.stderr);
-            eprintln!("Failed to verify proof: {:?}", &error);
+            false
         }  
     }
 }
@@ -134,5 +134,5 @@ fn test_generator_with_verification(){
         circuit: circuit
     };
     let proof: Proof = vrf.generate(nonce, x, y, signature);
-    vrf.verify(&proof.proof, &proof.verifier);
+    assert!(vrf.verify(&proof.proof, &proof.verifier) == true);
 }
