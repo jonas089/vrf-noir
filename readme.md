@@ -25,12 +25,7 @@ use ecdsa_circuit_input_lib::{keys::ecdsa::EcdsaKeyManager, core::signatures::{I
 use std::path::PathBuf;
 use serde_json;
 fn main(){
-    // any valid seed that is used to generate the random value
-    let hashed_nonce: Vec<u8> = vec![0;32];
-    let key_manger = EcdsaKeyManager{
-        slice: vec![]
-    };
-    let key_serialized = key_manger.new();
+    ... // load key from .db
     let key_manager: EcdsaKeyManager = EcdsaKeyManager{
         slice: key_serialized
     };
