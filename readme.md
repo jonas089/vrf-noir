@@ -7,6 +7,11 @@ The verifier contains the unique random output and can be used, together with th
 # Test setup
 Edit the `.env` file to point to the global path of the `circuit` directory on your machine and the absolute path to the nargo binary. Use either `nargo-darwin` or `nargo-linux`, depending on your system architecture.
 
+To enter the nix development shell for `vrf-rust`:
+```
+nix develop
+```
+
 To run the tests and see the output:
 ```
 cargo test -- --nocapture
