@@ -18,6 +18,15 @@ cargo test -- --nocapture
 
 ```
 
+# Build dependencies
+Note that for 64-bit Debian / Ubuntu the `noir-linux` binary has an additional dependency:
+```
+sudo apt update
+sudo apt-get install libc++1
+```
+
+For MacOS darwin systems, use the `noir-darwin` binary.
+
 # Usage with ecdsa-circuit-input-lib
 
 My [ecdsa-circuit-input-lib](https://github.com/jonas089/ecdsa-circuit-input-lib) provides functionality to generate elliptic curve keypairs, sign messages and export the public and private key in a format that is accepted by the randomness generator/ circuit.
