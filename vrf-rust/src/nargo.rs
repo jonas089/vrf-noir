@@ -55,14 +55,6 @@ impl VerifiableRandomGenerator{
         .output()
         .unwrap();
 
-        // create proofs dir and proof file
-        let temp_proofs = temp_dir.join("proofs");
-        create_dir(&temp_proofs).expect("Failed to create temp/proofs!");
-        let _ = match File::create(&temp_proofs.join("vrf.proof")) {
-            Err(msg) => panic!("{:?}", msg),
-            Ok(file) => file,
-        };
-
         let verifier: String = std::fs::read_to_string(&temp_dir.join("Verifier.toml")).unwrap();
         let proof: String = std::fs::read_to_string(&temp_dir.join("proofs").join("vrf.proof")).unwrap();
         if prove.status.success(){
