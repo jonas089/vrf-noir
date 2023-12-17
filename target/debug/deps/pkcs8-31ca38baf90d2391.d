@@ -1,0 +1,12 @@
+/home/chef/Desktop/vrf-noir/target/debug/deps/libpkcs8-31ca38baf90d2391.rmeta: /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/lib.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/error.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/private_key_info.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/traits.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/version.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/../README.md
+
+/home/chef/Desktop/vrf-noir/target/debug/deps/libpkcs8-31ca38baf90d2391.rlib: /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/lib.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/error.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/private_key_info.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/traits.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/version.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/../README.md
+
+/home/chef/Desktop/vrf-noir/target/debug/deps/pkcs8-31ca38baf90d2391.d: /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/lib.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/error.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/private_key_info.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/traits.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/version.rs /home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/../README.md
+
+/home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/lib.rs:
+/home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/error.rs:
+/home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/private_key_info.rs:
+/home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/traits.rs:
+/home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/version.rs:
+/home/chef/.cargo/registry/src/index.crates.io-6f17d22bba15001f/pkcs8-0.10.2/src/../README.md:
