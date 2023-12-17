@@ -1,7 +1,7 @@
 use std::{fs::create_dir, path::PathBuf};
 use tempfile::tempdir;
 use std::{fs, fs::File};
-use std::{io::Write, io::Read};
+use std::io::Write;
 use std::process::Command;
 use crate::types::Proof;
 
@@ -12,28 +12,28 @@ pub struct VerifiableRandomGenerator{
 
 impl VerifiableRandomGenerator{
     pub fn generate(&self, nonce: Vec<u8>, x: Vec<u8>, y: Vec<u8>, signature: Vec<u8>) -> Proof{
-        let temp_dir = tempdir().unwrap();
-        let temp_dir = temp_dir.path().to_path_buf();
-        let temp_src = temp_dir.join("src");
+        let temp_dir: tempfile::TempDir = tempdir().unwrap();
+        let temp_dir: PathBuf = temp_dir.path().to_path_buf();
+        let temp_src: PathBuf = temp_dir.join("src");
         create_dir(&temp_src).unwrap();
         // copy the entire circuit source
         for script in fs::read_dir(&self.circuit.join("src")).unwrap(){
-            let script_unwrapped = script.unwrap();
-            let script_path = &script_unwrapped.path();
-            let destination_path = &temp_src.join(&script_unwrapped.file_name());
+            let script_unwrapped: fs::DirEntry = script.unwrap();
+            let script_path: &PathBuf = &script_unwrapped.path();
+            let destination_path: &PathBuf = &temp_src.join(&script_unwrapped.file_name());
             match fs::copy(&script_path, &destination_path){
                 Err(msg) => panic!("Failed to copy script! \n Code: {:?}", msg),
                 Ok(_) => {}
             };
         };
         // copy the Nargo.toml (circuit config file)
-        let temp_nargo_toml = &temp_dir.join("Nargo.toml");
+        let temp_nargo_toml: &PathBuf = &temp_dir.join("Nargo.toml");
         match fs::copy(&self.circuit.join("Nargo.toml"), temp_nargo_toml){
             Err(msg) => panic!("Failed to copy Nargo.toml! \n Code: {:?}", msg),
             Ok(_) => {}
         }
         // create the prover file from params
-        let mut prover = match File::create(&temp_dir.join("Prover.toml")) {
+        let mut prover: File = match File::create(&temp_dir.join("Prover.toml")) {
             Err(msg) => panic!("{:?}", msg),
             Ok(file) => file,
         };
@@ -48,7 +48,7 @@ impl VerifiableRandomGenerator{
         writeln!(prover, "y = {:?}", y).unwrap();
         writeln!(prover, "signature = {:?}", signature).unwrap();
         // generate the proof -> this will create the vrf.proof file in proofs/
-        let prove = Command::new(&self.bin)
+        let prove: std::process::Output = Command::new(&self.bin)
         .arg("prove")
         .arg("--workspace")
         .current_dir(&temp_dir.to_str().unwrap())
@@ -59,7 +59,7 @@ impl VerifiableRandomGenerator{
             println!("Proof was generated!");
         }
         else{
-            let error = String::from_utf8_lossy(&prove.stderr);
+            let error: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&prove.stderr);
             eprintln!("Failed to generate proof!: {:?}", &error);
         }
         let verifier: String = std::fs::read_to_string(&temp_dir.join("Verifier.toml")).unwrap();
@@ -70,42 +70,42 @@ impl VerifiableRandomGenerator{
         }
     }
     pub fn verify(&self, proof: &str , verifier: &str) -> bool{
-        let temp_dir = tempdir().unwrap();
-        let temp_dir = temp_dir.path().to_path_buf();
-        let temp_src = temp_dir.join("src");
+        let temp_dir: tempfile::TempDir = tempdir().unwrap();
+        let temp_dir: PathBuf = temp_dir.path().to_path_buf();
+        let temp_src: PathBuf = temp_dir.join("src");
         create_dir(&temp_src).unwrap();
         // copy the entire circuit source
         for script in fs::read_dir(&self.circuit.join("src")).unwrap(){
-            let script_unwrapped = script.unwrap();
-            let script_path = &script_unwrapped.path();
-            let destination_path = &temp_src.join(&script_unwrapped.file_name());
+            let script_unwrapped: fs::DirEntry = script.unwrap();
+            let script_path: &PathBuf = &script_unwrapped.path();
+            let destination_path: &PathBuf = &temp_src.join(&script_unwrapped.file_name());
             match fs::copy(&script_path, &destination_path){
                 Err(msg) => panic!("Failed to copy script! \n Code: {:?}", msg),
                 Ok(_) => {}
             };
         };
         // copy the Nargo.toml (circuit config file)
-        let temp_nargo_toml = &temp_dir.join("Nargo.toml");
+        let temp_nargo_toml: &PathBuf = &temp_dir.join("Nargo.toml");
         match fs::copy(&self.circuit.join("Nargo.toml"), temp_nargo_toml){
             Err(msg) => panic!("Failed to copy Nargo.toml! \n Code: {:?}", msg),
             Ok(_) => {}
         }
         // write the proof and run the verify function
-        let temp_proofs = temp_dir.join("proofs");
+        let temp_proofs: PathBuf = temp_dir.join("proofs");
         create_dir(&temp_proofs).expect("Failed to create temp/proofs!");
-        let mut proof_file = match File::create(temp_proofs.join("vrf.proof")) {
+        let mut proof_file: File = match File::create(temp_proofs.join("vrf.proof")) {
             Err(msg) => panic!("{:?}", msg),
             Ok(file) => file,
         };
         proof_file.write_all(&proof.as_bytes()).expect("Failed to write proof!");
         // empty verifier
-        let mut verifier_file = match File::create(&temp_dir.join("Verifier.toml")) {
+        let mut verifier_file: File = match File::create(&temp_dir.join("Verifier.toml")) {
             Err(msg) => panic!("{:?}", msg),
             Ok(file) => file,
         };
         verifier_file.write_all(&verifier.as_bytes()).expect("Failed to write verifier!");
         // verify the proof
-        let verify = Command::new(&self.bin)
+        let verify: std::process::Output = Command::new(&self.bin)
         .arg("verify")
         .arg("--workspace")
         .current_dir(&temp_dir.to_str().unwrap())
