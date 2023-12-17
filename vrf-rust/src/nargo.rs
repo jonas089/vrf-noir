@@ -37,6 +37,11 @@ impl VerifiableRandomGenerator{
             Err(msg) => panic!("{:?}", msg),
             Ok(file) => file,
         };
+        // create verifier file
+        let mut verifier = match File::create(&temp_dir.join("Verifier.toml")) {
+            Err(msg) => panic!("{:?}", msg),
+            Ok(file) => file,
+        };
         // write the params line-by-line
         writeln!(prover, "nonce = {:?}", nonce).unwrap();
         writeln!(prover, "x = {:?}", x).unwrap();
