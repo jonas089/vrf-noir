@@ -9,22 +9,22 @@ fn main(){
     let circuit: PathBuf = PathBuf::from(env::var("DEFAULT_ABSOLUTE_CIRCUIT_PATH").expect("Failed to get DEFAULT_ABSOLUTE_CIRCUIT_PATH from env!"));
 
     // any valid seed that is used to generate the random value
-    let hashed_nonce: Vec<u8> = vec![0;32];
-    let key_manger = EcdsaKeyManager{
+    let hashed_nonce: Vec<u8> = vec![2;32];
+    let key_manger: EcdsaKeyManager = EcdsaKeyManager{
         slice: vec![]
     };
-    let key_serialized = key_manger.new();
+    let key_serialized: Vec<u8> = key_manger.new();
     let key_manager: EcdsaKeyManager = EcdsaKeyManager{
         slice: key_serialized
     };
     // generate circuit inputs
-    let input_generator = InputGenerator{
+    let input_generator: InputGenerator = InputGenerator{
         sk: key_manager.deserialize(),
         message: hashed_nonce
     };
-    let inputs = input_generator.generate();
+    let inputs: Inputs = input_generator.generate();
     // initialize the random generator from a noir binary and specify the circuit location
-    let random_generator = VerifiableRandomGenerator{
+    let random_generator: VerifiableRandomGenerator = VerifiableRandomGenerator{
         bin: PathBuf::from(&bin),
         circuit: PathBuf::from(&circuit)
     };
