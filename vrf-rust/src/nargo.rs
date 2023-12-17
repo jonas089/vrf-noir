@@ -42,11 +42,6 @@ impl VerifiableRandomGenerator{
             Err(msg) => panic!("{:?}", msg),
             Ok(file) => file,
         };
-        // create proof file
-        let _ = match File::create(&temp_dir.join("vrf.proof")) {
-            Err(msg) => panic!("{:?}", msg),
-            Ok(file) => file,
-        };
         // write the params line-by-line
         writeln!(prover, "nonce = {:?}", nonce).unwrap();
         writeln!(prover, "x = {:?}", x).unwrap();
@@ -59,6 +54,14 @@ impl VerifiableRandomGenerator{
         .current_dir(&temp_dir.to_str().unwrap())
         .output()
         .unwrap();
+
+        // create proofs dir and proof file
+        let temp_proofs = temp_dir.join("proofs");
+        create_dir(&temp_proofs).expect("Failed to create temp/proofs!");
+        let _ = match File::create(&temp_proofs.join("vrf.proof")) {
+            Err(msg) => panic!("{:?}", msg),
+            Ok(file) => file,
+        };
 
         let verifier: String = std::fs::read_to_string(&temp_dir.join("Verifier.toml")).unwrap();
         let proof: String = std::fs::read_to_string(&temp_dir.join("proofs").join("vrf.proof")).unwrap();
