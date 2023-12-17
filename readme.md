@@ -71,4 +71,5 @@ fn main(){
 
 When generating inputs for the randomness generator, the `message` that's to be signed corresponds to the seed of the randomness operation. This could, for example, be a `timestamp` with or without a `nonce`. The range of valid inputs depends on the needs of the system and invalid inputs can be rejected by the system when verifying the proof for the random parameter.
 
+For a POS consensus protocol, it would, for example, be a reasonable decision to restrict the input to the timestamp + block hash of the proposed block, to ensure that every node can only produce one deterministic pseudorandom number.
 
