@@ -1,8 +1,13 @@
 use vrf_rust::nargo::VerifiableRandomGenerator;
 use ecdsa_circuit_input_lib::{keys::ecdsa::EcdsaKeyManager, core::signatures::{InputGenerator, Inputs}, db::StoreManager};
 use std::path::PathBuf;
-use serde_json;
+use dotenv::dotenv;
+use std::env;
 fn main(){
+    dotenv().ok();
+    let bin: PathBuf = PathBuf::from(env::var("DEFAULT_NARGO_BINARY_PATH").expect("Failed to get DEFAULT_NARGO_BINARY_PATH from env!"));
+    let circuit: PathBuf = PathBuf::from(env::var("DEFAULT_ABSOLUTE_CIRCUIT_PATH").expect("Failed to get DEFAULT_ABSOLUTE_CIRCUIT_PATH from env!"));
+
     // any valid seed that is used to generate the random value
     let hashed_nonce: Vec<u8> = vec![0;32];
     let key_manger = EcdsaKeyManager{
@@ -20,8 +25,8 @@ fn main(){
     let inputs = input_generator.generate();
     // initialize the random generator from a noir binary and specify the circuit location
     let random_generator = VerifiableRandomGenerator{
-        bin: PathBuf::from("/users/chef/Desktop/vrf-noir/vrf-rust/bin/nargo-darwin"),
-        circuit: PathBuf::from("/users/chef/Desktop/vrf-noir/circuit")
+        bin: PathBuf::from(&bin),
+        circuit: PathBuf::from(&circuit)
     };
     // generate a proof and obtain the verifiable random value
     let proof: vrf_rust::types::Proof = random_generator.generate(inputs.message, inputs.x, inputs.y, inputs.signature);

@@ -185,6 +185,7 @@ dependencies = [
 name = "example"
 version = "0.1.0"
 dependencies = [
+ "dotenv",
  "ecdsa-circuit-input-lib",
  "serde_json",
  "vrf-rust",
