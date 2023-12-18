@@ -4,15 +4,15 @@ use hash::Random;
 use secp256k1::Signature;
 
 fn main(nonce: [u8;32], x: [u8;32], y:[u8;32], signature: [u8;64]) -> pub [u8;32] {
-    let signature = Signature{
+    let s = Signature{
         message: nonce,
         x: x,
         y: y,
         signature: signature
     };
-    assert(signature.verify());
+    assert(s.verify());
     let random = Random{
-        nonce: nonce
+        signature: signature
     };
     random.hash()
 }
