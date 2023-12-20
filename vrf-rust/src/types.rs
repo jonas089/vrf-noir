@@ -29,7 +29,6 @@ impl Proof{
 
         //let mut result: String = String::new();
         //let verifier: Vec<String> = serde_json::from_str(&self.verifier[9..&self.verifier.len()-1]).unwrap();
-
         let mut vf = Verifier{
             nonce: None,
             output: Vec::new(),
@@ -52,8 +51,6 @@ impl Proof{
                 _ => eprint!("Invalid value in Verifier!")
             }
         }
-        println!("Public information: {:?}", &vf);
-
         let mut result: String = String::new();
         for num in vf.output{
             result += &u128::from_str_radix(&num[2..], 16).unwrap().to_string();
