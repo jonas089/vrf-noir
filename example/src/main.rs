@@ -33,7 +33,7 @@ fn main(){
         // generate a proof and obtain the verifiable random value
         let proof: vrf_rust::types::Proof = random_generator.generate(inputs.message, inputs.x, inputs.y, inputs.signature);
         // output the random value
-        println!("Verifiable random value: {:?}", &proof.get_random_number());
+        println!("Verifiable random value: {:?}", &proof.get_random_number(false, true, true));
     
         // verify the integrity of the generation of the random parameter:
         let is_valid: bool = random_generator.verify(&proof.proof, &proof.verifier);
@@ -44,5 +44,4 @@ fn main(){
             println!("The random value could not be verified!")
         }
     }
-    
 }

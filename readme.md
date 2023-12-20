@@ -1,8 +1,16 @@
 # Verifiable randomness with zero knowledge
 
-This library is a cryptographic sub-protocol that can be used as a verifiable random number generator (vrf).
-For a pos consensus network the input may be constrained to a timestamp in a certain range `t0 < t < t1` appended by a `nonce`. While the range of possible inputs is known to the network in advance, the random number output is not. This property is based on the assumption that the node's private key is not leaked to the network, as the private key is used to sign the public input inside the `noir` circuit.
-The verifier contains the unique random output and can be used, together with the proof, to run the verification against the `Noir` circuit.
+This library is a cryptographic sub-protocol that can be used as a verifiable random number generator (vrf). For many projects this zero knowledge implementation is overkill and only projects that require the obfuscation of certain input parameters to the verifiable pseudorandom number generator may benefit from it. When looking to utilize verifiable randomness on-chain, you're better off with an implementation like Chainlink's VRF. Chainlink's VRF simply signs a message appended by a nonce and therefore produces a random hash output. While this may seem similar to the content of the `noir` circuit designed for the scope of this VRF subprotocol, it works very differently. This VRF generates random numbers based on a set of *inputs*:
+
+```
+    x: the x-coordinate of a public key
+    y: the y-coordinate of a public key
+    nonce: a hashed seed message
+    signature: a signature over a hashed seed message
+```
+The random number that is being generated is the only output of this protocol and is always *public*.
+The `x`, `y` and `nonce` inputs can be either *public* or *private* (obfuscation of inputs). 
+For most use cases this protocol is overkill and a simple signature over a nonce will be sufficient. 
 
 # Test setup
 Edit the `.env` file to point to the global path of the `circuit` directory on your machine and the absolute path to the nargo binary. Use either `nargo-darwin` or `nargo-linux`, depending on your system architecture.
@@ -35,6 +43,10 @@ From the `example` crate:
 
 ```rust
     ...
+    dotenv().ok();
+    let bin: PathBuf = PathBuf::from(env::var("DEFAULT_NARGO_BINARY_PATH").expect("Failed to get DEFAULT_NARGO_BINARY_PATH from env!"));
+    let circuit: PathBuf = PathBuf::from(env::var("DEFAULT_ABSOLUTE_CIRCUIT_PATH").expect("Failed to get DEFAULT_ABSOLUTE_CIRCUIT_PATH from env!"));
+
     // any valid seed that is used to generate the random value
     for i in 0..10{
         let hashed_nonce: Vec<u8> = vec![i;32];
@@ -60,7 +72,7 @@ From the `example` crate:
         // generate a proof and obtain the verifiable random value
         let proof: vrf_rust::types::Proof = random_generator.generate(inputs.message, inputs.x, inputs.y, inputs.signature);
         // output the random value
-        println!("Verifiable random value: {:?}", &proof.get_random_number());
+        println!("Verifiable random value: {:?}", &proof.get_random_number(false, true, true));
     
         // verify the integrity of the generation of the random parameter:
         let is_valid: bool = random_generator.verify(&proof.proof, &proof.verifier);
@@ -73,8 +85,3 @@ From the `example` crate:
     }
     ...
 ```
-
-When generating inputs for the randomness generator, the `message` that's to be signed corresponds to the seed of the randomness operation. This could, for example, be a `timestamp` with or without a `nonce`. The range of valid inputs depends on the needs of the system and invalid inputs can be rejected by the system when verifying the proof for the random parameter.
-
-For a POS consensus protocol, it would, for example, be a reasonable decision to restrict the input to the timestamp + block hash of the proposed block, to ensure that every node can only produce one deterministic pseudorandom number.
-
